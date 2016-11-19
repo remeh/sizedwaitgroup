@@ -53,7 +53,7 @@ func (s *SizedWaitGroup) Add(delta int) {
 			s.current <- true
 		}
 	} else {
-		for i := delta; i >= delta; i-- {
+		for i := delta; i > 0; i-- {
 			s.wg.Add(-1)
 			<-s.current
 		}
