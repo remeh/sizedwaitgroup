@@ -26,8 +26,8 @@ func main() {
         for i := 0; i < 50; i++ {
                 swg.Add()
                 go func(i int) {
+                        defer swg.Done()
                         query(i)
-                        swg.Done()
                 }(i)
         }
 
