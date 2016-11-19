@@ -13,8 +13,8 @@ import (
 	"sync"
 )
 
-// SizedWaitGroup has the same role and API as
-// the Golang sync.WaitGroup but adds a limit of
+// SizedWaitGroup has the same role and close to the
+// same API as the Golang sync.WaitGroup but adds a limit of
 // the amount of goroutines started concurrently.
 type SizedWaitGroup struct {
 	Size int
@@ -39,25 +39,15 @@ func New(limit int) SizedWaitGroup {
 	}
 }
 
-// Add increments/decrements the internal WaitGroup counter
-// by the given delta.
+// Add increments the internal WaitGroup counter.
 // It can be blocking if the limit of spawned goroutine
 // has been reached. It will stop blocking when Done has
 // been called.
 //
 // See sync.WaitGroup documentation for more information.
-func (s *SizedWaitGroup) Add(delta int) {
-	if delta >= 0 {
-		for i := 0; i < delta; i++ {
-			s.wg.Add(1)
-			s.current <- true
-		}
-	} else {
-		for i := delta; i > 0; i-- {
-			s.wg.Add(-1)
-			<-s.current
-		}
-	}
+func (s *SizedWaitGroup) Add() {
+	s.wg.Add(1)
+	s.current <- true
 }
 
 // Done decrements the SizedWaitGroup counter.

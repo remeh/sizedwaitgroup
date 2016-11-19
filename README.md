@@ -24,7 +24,7 @@ func main() {
         // 8 routines should be started concurrently.
         swg := New(8)
         for i := 0; i < 50; i++ {
-                swg.Add(1)
+                swg.Add()
                 go func(i int) {
                         query(i)
                         swg.Done()
