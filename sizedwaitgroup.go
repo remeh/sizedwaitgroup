@@ -46,15 +46,15 @@ func New(limit int) SizedWaitGroup {
 //
 // See sync.WaitGroup documentation for more information.
 func (s *SizedWaitGroup) Add() {
-	s.wg.Add(1)
 	s.current <- true
+	s.wg.Add(1)
 }
 
 // Done decrements the SizedWaitGroup counter.
 // See sync.WaitGroup documentation for more information.
 func (s *SizedWaitGroup) Done() {
-	s.wg.Done()
 	<-s.current
+	s.wg.Done()
 }
 
 // Wait blocks until the SizedWaitGroup counter is zero.
