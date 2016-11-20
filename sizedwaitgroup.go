@@ -24,8 +24,8 @@ type SizedWaitGroup struct {
 }
 
 // New creates a SizedWaitGroup.
-// The limit parameter if the maximum amount of
-// goroutine which can be started concurrently.
+// The limit parameter is the maximum amount of
+// goroutines which can be started concurrently.
 func New(limit int) SizedWaitGroup {
 	size := 4294967295 // 2^32 - 1
 	if limit > 0 {
@@ -40,8 +40,8 @@ func New(limit int) SizedWaitGroup {
 }
 
 // Add increments the internal WaitGroup counter.
-// It can be blocking if the limit of spawned goroutine
-// has been reached. It will stop blocking when Done has
+// It can be blocking if the limit of spawned goroutines
+// has been reached. It will stop blocking when Done is
 // been called.
 //
 // See sync.WaitGroup documentation for more information.

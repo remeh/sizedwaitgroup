@@ -21,7 +21,7 @@ func main() {
         rand.Seed(time.Now().UnixNano())
 
         // Typical use-case:
-        // 50 queries should be started as quick as possible
+        // 50 queries must be executed as quick as possible
         // but without overloading the database, so only
         // 8 routines should be started concurrently.
         swg := New(8)
