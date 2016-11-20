@@ -1,5 +1,7 @@
 # SizedWaitGroup
 
+[![GoDoc](https://godoc.org/github.com/remeh/sizedwaitgroup?status.svg)](https://godoc.org/github.com/remeh/sizedwaitgroup)
+
 `SizedWaitGroup` has the same role and API as `sync.WaitGroup` but it adds a limit of the amount of goroutines started concurrently.
 
 `SizedWaitGroup` adds the feature of limiting the maximum number of concurrently started routines. It could for example be used to start multiples routines querying a database but without sending too much queries in order to not overload the given database.
