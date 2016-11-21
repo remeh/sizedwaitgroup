@@ -15,6 +15,8 @@ import (
         "fmt"
         "math/rand"
         "time"
+
+        "github.com/remeh/sizedwaitgroup"
 )
 
 func main() {
@@ -24,7 +26,7 @@ func main() {
         // 50 queries must be executed as quick as possible
         // but without overloading the database, so only
         // 8 routines should be started concurrently.
-        swg := New(8)
+        swg := sizedwaitgroup.New(8)
         for i := 0; i < 50; i++ {
                 swg.Add()
                 go func(i int) {
