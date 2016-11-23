@@ -10,6 +10,7 @@
 package sizedwaitgroup
 
 import (
+	"math"
 	"sync"
 )
 
@@ -27,7 +28,7 @@ type SizedWaitGroup struct {
 // The limit parameter is the maximum amount of
 // goroutines which can be started concurrently.
 func New(limit int) SizedWaitGroup {
-	size := 4294967295 // 2^32 - 1
+	size := math.MaxInt32 // 2^32 - 1
 	if limit > 0 {
 		size = limit
 	}
