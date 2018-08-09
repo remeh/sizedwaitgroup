@@ -10,6 +10,7 @@
 package sizedwaitgroup
 
 import (
+	"context"
 	"math"
 	"sync"
 )
@@ -21,7 +22,8 @@ type SizedWaitGroup struct {
 	Size int
 
 	current chan struct{}
-	wg      sync.WaitGroup
+	wg      *sync.WaitGroup
+	ctx     context.Context
 }
 
 // New creates a SizedWaitGroup.
@@ -36,19 +38,37 @@ func New(limit int) SizedWaitGroup {
 		Size: size,
 
 		current: make(chan struct{}, size),
-		wg:      sync.WaitGroup{},
+		wg:      &sync.WaitGroup{},
+		ctx:     context.Background(),
+	}
+}
+
+// WithContext returns a copy of the SizedWaitGroup within a different
+// context.
+func (s *SizedWaitGroup) WithContext(ctx context.Context) *SizedWaitGroup {
+	return &SizedWaitGroup{
+		Size:    s.Size,
+		current: s.current,
+		wg:      s.wg,
+		ctx:     ctx,
 	}
 }
 
 // Add increments the internal WaitGroup counter.
 // It can be blocking if the limit of spawned goroutines
 // has been reached. It will stop blocking when Done is
-// been called.
+// been called, or when the context is canceled.
 //
 // See sync.WaitGroup documentation for more information.
-func (s *SizedWaitGroup) Add() {
-	s.current <- struct{}{}
+func (s *SizedWaitGroup) Add() error {
+	select {
+	case <-s.ctx.Done():
+		return s.ctx.Err()
+	case s.current <- struct{}{}:
+		break
+	}
 	s.wg.Add(1)
+	return nil
 }
 
 // Done decrements the SizedWaitGroup counter.
