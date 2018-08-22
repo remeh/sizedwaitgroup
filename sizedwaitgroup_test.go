@@ -68,18 +68,17 @@ func TestNoThrottling(t *testing.T) {
 	}
 }
 
-func TestAddContext(t *testing.T) {
+func TestAddWithContext(t *testing.T) {
 	ctx, cancelFunc := context.WithCancel(context.TODO())
 
 	swg := New(1)
-	swg_ctx := swg.WithContext(ctx)
 
-	if err := swg_ctx.Add(); err != nil {
+	if err := swg.AddWithContext(ctx); err != nil {
 		t.Fatalf("AddContext returned error: %v", err)
 	}
 
 	cancelFunc()
-	if err := swg_ctx.Add(); err != context.Canceled {
+	if err := swg.AddWithContext(ctx); err != context.Canceled {
 		t.Fatalf("AddContext returned non-context.Canceled error: %v", err)
 	}
 
