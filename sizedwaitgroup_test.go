@@ -1,6 +1,7 @@
 package sizedwaitgroup
 
 import (
+	"context"
 	"sync/atomic"
 	"testing"
 )
@@ -65,4 +66,20 @@ func TestNoThrottling(t *testing.T) {
 	if c != 10000 {
 		t.Fatalf("%d, not all routines have been executed.", c)
 	}
+}
+
+func TestAddWithContext(t *testing.T) {
+	ctx, cancelFunc := context.WithCancel(context.TODO())
+
+	swg := New(1)
+
+	if err := swg.AddWithContext(ctx); err != nil {
+		t.Fatalf("AddContext returned error: %v", err)
+	}
+
+	cancelFunc()
+	if err := swg.AddWithContext(ctx); err != context.Canceled {
+		t.Fatalf("AddContext returned non-context.Canceled error: %v", err)
+	}
+
 }
