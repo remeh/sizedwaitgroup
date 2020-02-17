@@ -8,7 +8,7 @@
 
 # Example
 
-```
+```go
 package main
 
 import (
