@@ -83,3 +83,26 @@ func TestAddWithContext(t *testing.T) {
 	}
 
 }
+
+func TestWaitWithContext(t *testing.T) {
+	t.Run("cancelled context error is returned", func(t *testing.T) {
+		ctx, cancelFunc := context.WithCancel(context.TODO())
+
+		swg := New(1)
+		swg.Add()
+		cancelFunc()
+
+		if err := swg.WaitWithContext(ctx); err != context.Canceled {
+			t.Fatalf("expected cancelled context: %s", err)
+		}
+	})
+	t.Run("done group returns nil", func(t *testing.T) {
+		swg := New(1)
+		swg.Add()
+		swg.Done()
+
+		if err := swg.WaitWithContext(context.TODO()); err != nil {
+			t.Fatalf("expected nil: %s", err)
+		}
+	})
+}
