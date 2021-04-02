@@ -82,3 +82,20 @@ func (s *SizedWaitGroup) Done() {
 func (s *SizedWaitGroup) Wait() {
 	s.wg.Wait()
 }
+
+// Wait blocks until the SizedWaitGroup counter is zero or the context is Done.
+// See sync.WaitGroup documentation for more information.
+func (s *SizedWaitGroup) WaitWithContext(ctx context.Context) error {
+	done := make(chan struct{})
+	go func() {
+		defer close(done)
+		s.Wait()
+		done <- struct{}{}
+	}()
+	select {
+	case <-ctx.Done():
+		return ctx.Err()
+	case <-done:
+	}
+	return nil
+}
