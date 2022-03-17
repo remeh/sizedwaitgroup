@@ -29,7 +29,7 @@ type SizedWaitGroup struct {
 // The limit parameter is the maximum amount of
 // goroutines which can be started concurrently.
 func New(limit int) SizedWaitGroup {
-	size := math.MaxInt32 // 2^32 - 1
+	size := math.MaxInt32 // 2^31 - 1
 	if limit > 0 {
 		size = limit
 	}
